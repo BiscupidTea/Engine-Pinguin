@@ -19,6 +19,9 @@
     <Filter Include="Src\tools">
       <UniqueIdentifier>{5e9e4c61-cc0b-4531-9e8f-ec6bab979526}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Tilemap">
+      <UniqueIdentifier>{6b787de9-1a72-4343-bea2-a0946137c9dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader.cpp">
@@ -68,6 +71,12 @@
     </ClCompile>
     <ClCompile Include="src\Tools\CollisionManager.cpp">
       <Filter>Src\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tilemap\Tile.cpp">
+      <Filter>Src\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tilemap\Tilemap.cpp">
+      <Filter>Src\Tilemap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +136,12 @@
     </ClInclude>
     <ClInclude Include="src\Tools\CollisionManager.h">
       <Filter>Src\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tilemap\Tile.h">
+      <Filter>Src\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tilemap\Tilemap.h">
+      <Filter>Src\Tilemap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
