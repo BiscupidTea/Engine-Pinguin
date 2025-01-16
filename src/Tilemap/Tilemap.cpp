@@ -63,26 +63,6 @@ void Tilemap::CreateTilemap()
 	tilemap.push_back(auxTilemap);
 }
 
-void Tilemap::Draw()
-{
-	float mapWidth = -(width * tileWidth) / 2;
-	float mapHeight = (height * tileHeight) / 2;
-
-	for (int i = 0; i < tilemap.size(); i++) 
-	{	
-		for (int y = 0; y < height; y++) 
-		{		
-			for (int x = 0; x < width; x++) 
-			{
-				if (tilemap[i][y][x].GetID() != NULL) {
-					tilemap[i][y][x].GetSprite()->setPosition(Vector3{ mapWidth + (tileWidth * x), mapHeight - (tileHeight * y), 0});
-					tilemap[i][y][x].GetSprite()->Draw();
-				}
-			}
-		}
-	}
-}
-
 bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 {
 	tinyxml2::XMLDocument document; //guarda el documento
@@ -97,7 +77,7 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 
 	// Loading Map element and save Map width, heigth in tiles and width, heigth of Tiles in pixels
 	tinyxml2::XMLElement* mapNode = document.FirstChildElement("map");
-	
+
 	if (mapNode == nullptr)
 	{
 		return false;
@@ -124,9 +104,9 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 
 	//Number of Tiles in the tileset
 	int tileCount = pTileset->IntAttribute("tilecount");
-	
+
 	//Columns of Tiles in the tileset
-	int columns = pTileset->IntAttribute("columns"); 
+	int columns = pTileset->IntAttribute("columns");
 
 	//Rows in the tileset
 	int rows = tileCount / columns;
@@ -141,9 +121,9 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 	float tileX = 0.0f, tileY = 0.0f;
 	int id = 0;
 
-	for (int i = 0; i < rows; i++) 
+	for (int i = 0; i < rows; i++)
 	{
-		for (int j = 0; j < columns; j++) 
+		for (int j = 0; j < columns; j++)
 		{
 			Tile newTile;
 
@@ -156,21 +136,21 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 			AddTile(newTile);
 			id++;
 		}
-		
+
 		tileX = 0;
 		tileY += tiles[i].GetHeight();
 	}
 
 	tinyxml2::XMLElement* pTile = pTileset->FirstChildElement("tile");
 
-	while (pTile) 
+	while (pTile)
 	{
 		unsigned int id = pTile->IntAttribute("id");
-		
+
 		tinyxml2::XMLElement* pProperty = pTile->FirstChildElement("properties")->FirstChildElement("property");
-		
+
 		string propertyName = pProperty->Attribute("value");
-		
+
 		if (propertyName == "false")
 		{
 			tiles[id].SetCollision(false);
@@ -192,34 +172,34 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 	}
 
 	int layerCount = 0;
-	
-	while (layer) 
+
+	while (layer)
 	{
 		// Loading Data element
 		tinyxml2::XMLElement* data = layer->FirstChildElement("data");
-		
+
 		if (data == NULL)
 		{
 			return false;
 		}
 
-		if (layerCount > 0) 
+		if (layerCount > 0)
 		{
 			Tile** auxTileMap;
 			auxTileMap = new Tile * [height];
-			
-			for (int i = 0; i < height; i++) 
+
+			for (int i = 0; i < height; i++)
 			{
 				auxTileMap[i] = new Tile[width];
 			}
-			
+
 			tilemap.push_back(auxTileMap);
 		}
 
-		while (data) 
+		while (data)
 		{
 			std::vector<int> tileGids;
-		
+
 			for (tinyxml2::XMLElement* pTile = data->FirstChildElement("tile");
 				pTile != NULL;
 				pTile = pTile->NextSiblingElement("tile"))
@@ -230,9 +210,9 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 
 			int gid = 0;
 
-			for (int y = 0; y < height; y++) 
+			for (int y = 0; y < height; y++)
 			{
-				for (int x = 0; x < width; x++) 
+				for (int x = 0; x < width; x++)
 				{
 					if (tileGids[gid] != 0)
 					{
@@ -245,10 +225,36 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 
 			data = data->NextSiblingElement("data");
 		}
-		
+
 		layerCount++;
 		layer = layer->NextSiblingElement("layer");
 	}
 
 	return true;
+}
+
+void Tilemap::Draw()
+{
+	float mapWidth = -(width * tileWidth) / 2;
+	float mapHeight = (height * tileHeight) / 2;
+
+	for (int i = 0; i < tilemap.size(); i++) 
+	{	
+		for (int y = 0; y < height; y++) 
+		{		
+			for (int x = 0; x < width; x++) 
+			{
+				if (tilemap[i][y][x].GetID() != NULL) {
+					tilemap[i][y][x].GetSprite()->setPosition(Vector3{ mapWidth + (tileWidth * x), mapHeight - (tileHeight * y), 0});
+					tilemap[i][y][x].GetSprite()->Draw();
+				}
+			}
+		}
+	}
+}
+
+//TODO: Finish collision
+void Tilemap::CheckCollision(Entity2D* entity)
+{
+
 }

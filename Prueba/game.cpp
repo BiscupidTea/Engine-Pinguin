@@ -50,6 +50,8 @@ void Game::init()
 
 	Letter->SetAnimation(idleAnimation);
 	Player->SetAnimation(playerIdle);
+
+	//tilemap = new Tilemap("res/Tilemap/Map.tmx", TextureColor2, GetRenderer(), PlayerPos, TextureScale2, TextureRotation2);
 }
 
 void Game::update()
@@ -111,6 +113,7 @@ void Game::update()
 	BackGround->Draw();
 	Letter->Draw();
 	Player->Draw();
+	//tilemap->Draw();
 }
 
 void Game::exit()
@@ -125,4 +128,6 @@ void Game::exit()
 	delete BackgroundAnimation;
 	delete runAnimation;
 	delete playerIdle;
+
+	delete tilemap;
 }

@@ -25,6 +25,9 @@ private:
 	float tileWidth;
 	float tileHeight;
 
+	float convertedPosX;
+	float convertedPosY;
+
 	string path;
 
 	Vector4 defaultColor = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
@@ -46,8 +49,10 @@ public:
 	void AddTile(Tile& newTile);
 	void CreateTilemap();
 
+	bool ImportTilemap(const char* filePath, Renderer* rkRenderer);
+
 	void Draw();
 
-	bool ImportTilemap(const char* filePath, Renderer* rkRenderer);
+	void CheckCollision(Entity2D* entity);
 };
 

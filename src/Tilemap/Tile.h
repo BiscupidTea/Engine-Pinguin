@@ -2,8 +2,10 @@
 
 #include "Tools/dll-Exp-Inp.h"
 #include "Entity/Sprite.h"
+#include "Tools/CollisionManager.h"
 
 using namespace sprite;
+using namespace collisionManager;
 
 class EXPORT Tile
 {

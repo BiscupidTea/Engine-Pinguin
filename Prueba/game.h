@@ -11,6 +11,8 @@ private:
 	Sprite* BackGround;
 	Sprite* Player;
 
+	Tilemap* tilemap;
+
 	Vector3 lastTexturePos;
 
 	Vector4 ShaperColor;
@@ -24,7 +26,6 @@ private:
 	Vector3 TextureRotation;
 
 	Vector3 PlayerPos;
-
 
 	Vector4 TextureColor2;
 	Vector3 TexturePosition2;

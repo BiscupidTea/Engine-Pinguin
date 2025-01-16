@@ -5,6 +5,8 @@
 #include "Entity/Shape.h"
 #include "Entity/Sprite.h"
 
+#include "Tilemap/Tilemap.h"
+
 #include "Tools/dll-Exp-Inp.h"
 #include "Tools/Time.h"
 #include "Tools/CollisionManager.h"
