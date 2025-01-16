@@ -78,6 +78,9 @@
     <ClCompile Include="src\Tilemap\Tilemap.cpp">
       <Filter>Src\Tilemap</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tilemap\tinyxml2.cpp">
+      <Filter>Src\Tilemap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Shader.h">
@@ -141,6 +144,9 @@
       <Filter>Src\Tilemap</Filter>
     </ClInclude>
     <ClInclude Include="src\Tilemap\Tilemap.h">
+      <Filter>Src\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tilemap\tinyxml2.h">
       <Filter>Src\Tilemap</Filter>
     </ClInclude>
   </ItemGroup>
