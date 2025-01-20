@@ -51,7 +51,7 @@ void Game::init()
 	Letter->SetAnimation(idleAnimation);
 	Player->SetAnimation(playerIdle);
 
-	//tilemap = new Tilemap("res/Tilemap/Map.tmx", TextureColor2, GetRenderer(), PlayerPos, TextureScale2, TextureRotation2);
+	tilemap = new Tilemap("res/Tilemap/Map.tmx", TextureColor2, GetRenderer(), PlayerPos, TextureScale2, TextureRotation2);
 }
 
 void Game::update()

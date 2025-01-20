@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.11.0" name="Tilemap" tilewidth="16" tileheight="16" tilecount="162" columns="9">
- <properties>
-  <property name="HasCollision" type="bool" value="false"/>
- </properties>
  <image source="Tilemap_Dungeon_original_size.png" width="144" height="288"/>
  <tile id="0">
   <properties>
-   <property name="HasCollision" type="bool" value="true"/>
+   <property name="HasCollision" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="1">
@@ -56,7 +53,7 @@
  </tile>
  <tile id="10">
   <properties>
-   <property name="HasCollision" type="bool" value="false"/>
+   <property name="HasCollision" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="11">
@@ -436,7 +433,7 @@
  </tile>
  <tile id="86">
   <properties>
-   <property name="HasCollision" type="bool" value="false"/>
+   <property name="HasCollision" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="87">
@@ -481,7 +478,7 @@
  </tile>
  <tile id="95">
   <properties>
-   <property name="HasCollision" type="bool" value="false"/>
+   <property name="HasCollision" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="96">
@@ -526,7 +523,7 @@
  </tile>
  <tile id="104">
   <properties>
-   <property name="HasCollision" type="bool" value="false"/>
+   <property name="HasCollision" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="105">
@@ -616,12 +613,12 @@
  </tile>
  <tile id="122">
   <properties>
-   <property name="HasCollision" type="bool" value="false"/>
+   <property name="HasCollision" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="123">
   <properties>
-   <property name="HasCollision" type="bool" value="true"/>
+   <property name="HasCollision" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="124">
@@ -661,12 +658,12 @@
  </tile>
  <tile id="131">
   <properties>
-   <property name="HasCollision" type="bool" value="false"/>
+   <property name="HasCollision" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="132">
   <properties>
-   <property name="HasCollision" type="bool" value="true"/>
+   <property name="HasCollision" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="133">
@@ -706,12 +703,12 @@
  </tile>
  <tile id="140">
   <properties>
-   <property name="HasCollision" type="bool" value="false"/>
+   <property name="HasCollision" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="141">
   <properties>
-   <property name="HasCollision" type="bool" value="true"/>
+   <property name="HasCollision" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="142">

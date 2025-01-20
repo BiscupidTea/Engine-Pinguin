@@ -3,9 +3,6 @@
 
 Tilemap::Tilemap(const char* textureName, Vector4 rgba, Renderer* renderer, Vector3 newPosition, Vector3 newScale, Vector3 newRotation) : Entity2D(rgba, render, newPosition, newScale, newRotation)
 {
-	tileWidth = 16.0f;
-	tileHeight = 16.0f;
-
 	ImportTilemap(textureName, renderer);
 }
 
@@ -14,7 +11,7 @@ Tilemap::~Tilemap()
 
 }
 
-Tile& Tilemap::GetTile(int tileID)
+const Tile& Tilemap::GetTile(unsigned int tileID)
 {
 	Tile* invalidTile = nullptr;
 
@@ -65,18 +62,19 @@ void Tilemap::CreateTilemap()
 
 bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 {
-	tinyxml2::XMLDocument document; //guarda el documento
-	tinyxml2::XMLError errorHandler; //guarda el resultado de las funciones
+	//***********************************************************************************************************************
+	//Load TMX file.
+	tinyxml2::XMLDocument TMXDocument;
+	tinyxml2::XMLError errorHandler;
 
-	errorHandler = document.LoadFile(filePath); //carga el archivo XML
+	errorHandler = TMXDocument.LoadFile(filePath); 
 
 	if (errorHandler == tinyxml2::XML_ERROR_FILE_NOT_FOUND || errorHandler == tinyxml2::XML_ERROR_FILE_COULD_NOT_BE_OPENED)
 	{
 		return false;
 	}
 
-	// Loading Map element and save Map width, heigth in tiles and width, heigth of Tiles in pixels
-	tinyxml2::XMLElement* mapNode = document.FirstChildElement("map");
+	tinyxml2::XMLElement* mapNode = TMXDocument.FirstChildElement("map");
 
 	if (mapNode == nullptr)
 	{
@@ -87,36 +85,61 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 	SetWidth(mapNode->FloatAttribute("width"));
 	SetHeight(mapNode->FloatAttribute("height"));
 
+	//Create the tilemap.
+	CreateTilemap();
+
 	//Set the width and height for the tiles.
-	for (int i = 0; i < tiles.size(); i++)
-	{
-		tiles[i].SetWidth(mapNode->FloatAttribute("tilewidth"));
-		tiles[i].SetHeight(mapNode->FloatAttribute("tileheight"));
-	}
+	tileWidth = mapNode->FloatAttribute("tilewidth");
+	tileHeight = mapNode->FloatAttribute("tileheight");
 
 	// Loading Tilset element
-	tinyxml2::XMLElement* pTileset = mapNode->FirstChildElement("tileset");
+	tinyxml2::XMLElement* TMXTileset = mapNode->FirstChildElement("tileset");
 
-	if (pTileset == NULL)
+	if (TMXTileset == NULL)
 	{
 		return false;
 	}
 
+	//***********************************************************************************************************************
+	//Load TSX file.
+	string TSXpath = "res/Tilemap/";
+	TSXpath += TMXTileset->Attribute("source");
+
+	tinyxml2::XMLDocument TSXDocument; 
+	tinyxml2::XMLError errorHandler2;
+
+	errorHandler2 = TSXDocument.LoadFile(TSXpath.c_str());
+
+	if (errorHandler2 == tinyxml2::XML_ERROR_FILE_NOT_FOUND || errorHandler2 == tinyxml2::XML_ERROR_FILE_COULD_NOT_BE_OPENED)
+	{
+		return false;
+	}
+
+	// Loading Map element and save Map width, heigth in tiles and width, heigth of Tiles in pixels
+	tinyxml2::XMLElement* TSXTileset = TSXDocument.FirstChildElement("tileset");
+
+	if (TSXTileset == NULL)
+	{
+		return false;
+	}
+
+	// Save the Tiles in the TileMap
+	imageWidth = TSXTileset->FirstChildElement("image")->IntAttribute("width");
+	imageHeight = TSXTileset->FirstChildElement("image")->IntAttribute("height");
+
+	//***********************************************************************************************************************
+
+	imagePath = "res/Tilemap/";
+	imagePath += TSXTileset->FirstChildElement("image")->Attribute("source");
+
 	//Number of Tiles in the tileset
-	int tileCount = pTileset->IntAttribute("tilecount");
+	int tileCount = TSXTileset->IntAttribute("tilecount");
 
 	//Columns of Tiles in the tileset
-	int columns = pTileset->IntAttribute("columns");
+	int columns = TSXTileset->IntAttribute("columns");
 
 	//Rows in the tileset
 	int rows = tileCount / columns;
-
-	path = "Assets/";
-	path += pTileset->FirstChildElement("image")->Attribute("source");
-
-	// Save the Tiles in the TileMap
-	imageWidth = pTileset->FirstChildElement("image")->IntAttribute("width");
-	imageHeight = pTileset->FirstChildElement("image")->IntAttribute("height");
 
 	float tileX = 0.0f, tileY = 0.0f;
 	int id = 0;
@@ -130,9 +153,9 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 			newTile.SetID(id);
 
 			//TODO: Pasar los parametros correctos de cada Tile.
-			newTile.SetSprite(path.c_str(), defaultColor, render, defaultPosition, defaultScale, defaultRotation);
+			newTile.SetSprite(imagePath.c_str(), defaultColor, render, defaultPosition, defaultScale, defaultRotation);
 
-			tileX += tiles[j].GetWidth();
+			tileX += tileWidth;
 			AddTile(newTile);
 			id++;
 		}
@@ -141,7 +164,7 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 		tileY += tiles[i].GetHeight();
 	}
 
-	tinyxml2::XMLElement* pTile = pTileset->FirstChildElement("tile");
+	tinyxml2::XMLElement* pTile = TSXTileset->FirstChildElement("tile");
 
 	while (pTile)
 	{
@@ -232,6 +255,7 @@ bool Tilemap::ImportTilemap(const char* filePath, Renderer* renderer)
 
 	return true;
 }
+
 
 void Tilemap::Draw()
 {

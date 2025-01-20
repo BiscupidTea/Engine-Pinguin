@@ -28,7 +28,7 @@ private:
 	float convertedPosX;
 	float convertedPosY;
 
-	string path;
+	string imagePath;
 
 	Vector4 defaultColor = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
 	Vector3 defaultPosition = Vector3{0.0f, 0.0f, 0.0f};
@@ -40,7 +40,7 @@ public:
 	Tilemap(const char* textureName, Vector4 rgba, Renderer* renderer, Vector3 newPosition, Vector3 newScale, Vector3 newRotation);
 	~Tilemap();
 	
-	Tile& GetTile(int tileID);
+	const Tile& GetTile(unsigned int tileID);
 
 	void SetWidth(float value);
 	void SetHeight(float value);
