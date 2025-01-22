@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "Tilemap.tsx",
     "expandedProjectPaths": [
         "."
     ],
@@ -68,14 +68,16 @@
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
+        "Map.tmx",
+        "Tilemap.tsx"
     ],
     "project": "Map.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "C:/Users/facus/OneDrive/Escritorio/Engine_Final_Cvitanich/Engine_Final_Cvitanich/EngineExe/Assets/hyruleField.tmx",
-        "Test.tmx",
         "Map.tmx",
         "Tilemap.tsx",
+        "C:/Users/facus/OneDrive/Escritorio/Engine_Final_Cvitanich/Engine_Final_Cvitanich/EngineExe/Assets/hyruleField.tmx",
+        "Test.tmx",
         "hyruleField.tmx",
         "Map..tmx"
     ],

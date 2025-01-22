@@ -1,64 +1,21 @@
 #include "Tile.h"
 
-Tile::Tile()
+Tile::Tile(int id, bool hasCollision, UV uvArray[4])
 {
-	ID = 0;
-	hasCollision = false;
+	this->id = id;
+	this->hasCollision = hasCollision;
 
-	width = 16.0f;
-	height = 16.0f;
+	this->uvArray[0].u = uvArray[0].u;
+	this->uvArray[1].u = uvArray[1].u;
+	this->uvArray[2].u = uvArray[2].u;
+	this->uvArray[3].u = uvArray[3].u;
+
+	this->uvArray[0].v = uvArray[0].v;
+	this->uvArray[1].v = uvArray[1].v;
+	this->uvArray[2].v = uvArray[2].v;
+	this->uvArray[3].v = uvArray[3].v;
 }
 
 Tile::~Tile()
 {
-}
-
-void Tile::SetID(int value)
-{
-	ID = value;
-}
-
-int Tile::GetID()
-{
-	return ID;
-}
-
-void Tile::SetCollision(bool value)
-{
-	hasCollision = value;
-}
-
-bool Tile::GetCollision()
-{
-	return hasCollision;
-}
-
-void Tile::SetWidth(float value)
-{
-	width = value;
-}
-
-float Tile::GetWidth()
-{
-	return width;
-}
-
-void Tile::SetHeight(float value)
-{
-	height = value;
-}
-
-float Tile::GetHeight()
-{
-	return height;
-}
-
-void Tile::SetSprite(const char* textureName, Vector4 rgba, Renderer* render, Vector3 newPosition, Vector3 newScale, Vector3 newRotation)
-{
-	sprite = new Sprite(textureName, rgba, render, newPosition, newScale, newRotation);
-}
-
-Sprite* Tile::GetSprite()
-{
-	return sprite;
 }
