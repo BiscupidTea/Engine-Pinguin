@@ -13,46 +13,48 @@ class EXPORT Tilemap : public Entity2D
 {
 private:
 
-	vector<Tile> tiles;
-	vector<Tile**> tilemap;
+    void LoadTileMaps(const vector<const char*>& tileMapFiles);
+    void LoadTileSet(const char* tileSetFile);
 
-	float width;
-	float height;
+    TileMapLayer ReadSingleMap(const char* filename);
+    vector<vector<vec2>> CalculateUVCoordsInMap(int heightTiles, int widthTiles, int totalHeight, int totalWidth, int tileHeight, int tileWidth);
+    void AddToVertex(float x, float y, int tileId, vec2 UvCoord, vector<float>& vertexVector);
 
-	float imageWidth;
-	float imageHeight;
+    vector<TileMapLayer> tileMap;
+    vector<Tile> tileSet;
 
-	float tileWidth;
-	float tileHeight;
+    unsigned int tileMapTexture;
 
-	float convertedPosX;
-	float convertedPosY;
+    //Map
+    int mapPixelWidth;
+    int mapPixelHeight;
 
-	string imagePath;
+    int tileSetTileHeight;
+    int tileSetTileWidth;
 
-	Vector4 defaultColor = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
-	Vector3 defaultPosition = Vector3{0.0f, 0.0f, 0.0f};
-	Vector3 defaultScale = Vector3{1.0f, 1.0f, 1.0f};
-	Vector3 defaultRotation = Vector3{ 1.0f, 1.0f, 1.0f };
+    int mapTileHeight;
+    int mapTileWidth;
+
+    int layerCount;
+
+    //Tiles
+    int tilePixelWidth;
+    int tilePixelHeight;
+
+    float* vertex;
+    int* indices;
+
 
 public:
 
-	Tilemap(const char* textureName, Vector4 rgba, Renderer* renderer, Vector3 newPosition, Vector3 newScale, Vector3 newRotation);
+	Tilemap(const char* tileSetFile, const vector<const char*>& tileMapFiles, const char* tileMapImage, 
+		    Vector4 rgba, Renderer* renderer, Vector3 newPosition, Vector3 newScale, Vector3 newRotation);
+
 	~Tilemap();
-	
-	const Tile& GetTile(unsigned int tileID);
 
-	void SetWidth(float value);
-	void SetHeight(float value);
+    void Draw();
 
-	void SetTileInTilemap(int layer, int column, int row, int tileID);
-	void AddTile(Tile& newTile);
-	void CreateTilemap();
-
-	bool ImportTilemap(const char* filePath, Renderer* rkRenderer);
-
-	void Draw();
-
-	void CheckCollision(Entity2D* entity);
+    bool hasCollision(int layer, Entity2D entity);
+    bool hasCollision(int layer, int x, int y, int width, int height);
 };
 

@@ -9,12 +9,13 @@ class EXPORT Tile
 {
 public:
 
-	Tile(int id, bool hasCollision, UV uvArray[4]);
+	Tile(int id, bool hasCollision, std::vector<glm::vec2> UV);
 	~Tile();
 
-private:
-
-	UV uvArray[4];
+	glm::vec2 topRightUV;
+	glm::vec2 topLeftUV;
+	glm::vec2 bottomRightUV;
+	glm::vec2 bottomleftUV;
 
 	int id;
 	bool hasCollision;
