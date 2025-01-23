@@ -32,7 +32,7 @@ namespace sprite
 		indexs = new int[indexSize]
 		{
 			0, 1, 3,
-				1, 2, 3
+			1, 2, 3
 		};
 	}
 

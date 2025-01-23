@@ -31,6 +31,8 @@
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Tilemap\Tile.cpp" />
     <ClCompile Include="src\Tilemap\Tilemap.cpp" />
+    <ClCompile Include="src\Tilemap\TilemapLayer.cpp" />
+    <ClCompile Include="src\Tilemap\TilemapLayerData.cpp" />
     <ClCompile Include="src\Tilemap\tinyxml2.cpp" />
     <ClCompile Include="src\Tools\CollisionManager.cpp" />
     <ClCompile Include="src\Tools\ErrorLog.cpp" />
@@ -52,6 +54,8 @@
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Tilemap\Tile.h" />
     <ClInclude Include="src\Tilemap\Tilemap.h" />
+    <ClInclude Include="src\Tilemap\TilemapLayer.h" />
+    <ClInclude Include="src\Tilemap\TilemapLayerData.h" />
     <ClInclude Include="src\Tilemap\tinyxml2.h" />
     <ClInclude Include="src\Tools\CollisionManager.h" />
     <ClInclude Include="src\Tools\dll-Exp-Inp.h" />

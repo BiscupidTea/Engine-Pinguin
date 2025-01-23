@@ -1,145 +1,100 @@
 #include "Tilemap.h"
 #include "Tilemap/tinyxml2.h"
 
+using namespace tinyxml2;
+
 Tilemap::Tilemap(const char* tileSetFile, const vector<const char*>& tileMapFiles, const char* tileMapImage,
 	             Vector4 rgba, Renderer* renderer, Vector3 newPosition, Vector3 newScale, Vector3 newRotation) 
-	           : Entity2D(rgba, render, newPosition, newScale, newRotation)
+	           : Entity2D(rgba, renderer, newPosition, newScale, newRotation)
 {
 	LoadTileSet(tileSetFile);
-	LoadTileMaps(tileMapFiles);
 
-	vertexSize = 36 * mapTileHeight * mapTileWidth;
-
-	vector<float> vertexVector;
-
-	//for (int i = 0; i < tileMap.size(); i++)
-	//{
-
-		//{
-		//  // positions		    // colors					// texture coords
-		//  1, 1, 0,       1.0f, 1.0f, 1.0f, 1.0f,       uvX + uvWidth, uvY + uvHeight, // top right
-		//  1, 0, 0,      1.0f, 1.0f, 1.0f, 1.0f,         uvX + uvWidth, uvY, // bottom right
-		//  0, 0, 0,      1.0f, 1.0f, 1.0f, 1.0f,        uvX, uvY, // bottom left
-		//  0, 1, 0,       1.0f, 1.0f, 1.0f, 1.0f,       uvX, uvY + uvHeight // top left 
-		//};
-
-	for (int y = 0; y < mapTileHeight; y++)
+	for (int i = 0; i < tileMapFiles.size(); i++)
 	{
-		cout << endl;
-
-		for (int x = 0; x < mapTileWidth; x++)
-		{
-			int tileId = tileMap.at(1).getTileId(x, y);
-
-			AddToVertex(static_cast<float>(1 + x), static_cast<float>(1 - y), tileId, tileId >= 0 ? tileSet.at(tileMap.at(1).getTileId(x, y)).topRightUV : vec2(0, 0), vertexVector);
-			AddToVertex(static_cast<float>(1 + x), static_cast<float>(0 - y), tileId, tileId >= 0 ? tileSet.at(tileMap.at(1).getTileId(x, y)).bottomRightUV : vec2(0, 0), vertexVector);
-			AddToVertex(static_cast<float>(0 + x), static_cast<float>(0 - y), tileId, tileId >= 0 ? tileSet.at(tileMap.at(1).getTileId(x, y)).bottomleftUV : vec2(0, 0), vertexVector);
-			AddToVertex(static_cast<float>(0 + x), static_cast<float>(1 - y), tileId, tileId >= 0 ? tileSet.at(tileMap.at(1).getTileId(x, y)).topLeftUV : vec2(0, 0), vertexVector);
-		}
+		layers.emplace_back(new TilemapLayer(tileMapFiles.at(i), tileMapImage, tileSet, rgba, renderer, newPosition, newScale, newRotation));
 	}
-
-	indexSize = 6 * mapTileHeight * mapTileWidth;
-	vector<int> indicesVector;
-	
-	for (int i = 0; i < mapTileWidth * mapTileHeight; i++)
-	{
-		indicesVector.push_back(0 + (4 * i));
-		indicesVector.push_back(1 + (4 * i));
-		indicesVector.push_back(3 + (4 * i));
-		indicesVector.push_back(1 + (4 * i));
-		indicesVector.push_back(2 + (4 * i));
-		indicesVector.push_back(3 + (4 * i));
-	}
-
-	// int indices[] = {
-	//     0, 1, 3,
-	//     1, 2, 3
-	// };
-
-	vertex = new float[vertexSize];
-	std::copy(std::begin(vertexVector), std::end(vertexVector), vertex);
-
-	indices = new int[indexSize];
-	std::copy(std::begin(indicesVector), std::end(indicesVector), indices);
-
-	render->CreateVBuffer(vertexPositions, indexs, vertexSize, indexSize, atributeVertexSize, VAO, VBO, EBO, aColorSize, aUvSize);
-	render->BindTexture(tileMapImage, tileMapTexture);
 }
 
 Tilemap::~Tilemap()
 {
-	delete vertex;
-	delete indexs;
-}
+	for (TilemapLayer* layer : layers)
+	{
+		delete layer;
+	}
 
-void Tilemap::Draw()
-{
-	render->DrawTexture(VAO, indexSize, color, model, tileMapTexture);
-}
-
-bool Tilemap::hasCollision(int layer, Entity2D entity)
-{
-	return true;
-}
-
-bool Tilemap::hasCollision(int layer, int x, int y, int width, int height)
-{
-	return true;
-}
-
-void Tilemap::LoadTileMaps(const vector<const char*>& tileMapFiles)
-{
+	layers.clear();
 }
 
 void Tilemap::LoadTileSet(const char* tileSetFile)
 {
+	XMLDocument doc;
+	if (doc.LoadFile(tileSetFile) != XML_SUCCESS)
+	{
+		cout << "Error loading file XML: " << tileSetFile << endl;
+		return;
+	}
+
+	XMLElement* root = doc.FirstChildElement("tileset");
+	if (!root)
+	{
+		cout << "Error: file is not a tileset file" << endl;
+		return;
+	}
+
+	root->QueryIntAttribute("tilewidth", &tilePixelWidth);
+	root->QueryIntAttribute("tileheight", &tilePixelHeight);
+
+	root = doc.FirstChildElement("tileset")->FirstChildElement("image");
+	root->QueryIntAttribute("width", &mapPixelWidth);
+	root->QueryIntAttribute("height", &mapPixelHeight);
+
+	tileSetTileHeight = (mapPixelHeight / tilePixelHeight);
+	tileSetTileWidth = (mapPixelWidth / tilePixelWidth);
+
+	vector<vector<vec2>> tileSetUV = CalculateUVCoordsInMap(tileSetTileHeight, tileSetTileWidth, mapPixelHeight, mapPixelWidth, tilePixelHeight,
+		tilePixelWidth);
+
+	root = doc.FirstChildElement("tileset");
+
+	XMLElement* tileElement = root->FirstChildElement("tile");
+	while (tileElement)
+	{
+		int tileId = tileElement->IntAttribute("id");
+		bool hasCollision = false;
+
+		XMLElement* properties = tileElement->FirstChildElement("properties");
+		if (properties)
+		{
+			XMLElement* property = properties->FirstChildElement("property");
+			while (property)
+			{
+				const char* name = property->Attribute("name");
+				if (name && strcmp(name, "Obstacle") == 0)
+				{
+					const char* value = property->Attribute("value");
+					if (value && strcmp(value, "true") == 0)
+					{
+						hasCollision = true;
+						break;
+					}
+				}
+				property = property->NextSiblingElement("property");
+			}
+		}
+
+		tileSet.push_back(Tile(tileId, hasCollision, tileSetUV.at(tileId)));
+		tileElement = tileElement->NextSiblingElement("tile");
+	}
+	cout << "Loaded " << tileSet.size() << " tiles" << endl;
+	cout << endl;
 }
 
-TileMapLayer Tilemap::ReadSingleMap(const char* filename)
+void Tilemap::Draw()
 {
-	ifstream file(filename);
-	if (!file.is_open())
+	for (TilemapLayer* layer : layers)
 	{
-		cout << "Error to open file: " << filename << endl;
-		return TileMapLayer(0, 0);
+		layer->Draw();
 	}
-
-	vector<vector<int>> tempLayer;
-	string line;
-
-	while (getline(file, line))
-	{
-		vector<int> row;
-		stringstream ss(line);
-		string cell;
-		
-		while (getline(ss, cell, ','))
-		{
-			row.push_back(stoi(cell));
-		}
-		
-		tempLayer.push_back(row);
-	}
-
-	file.close();
-
-	int width = tempLayer[0].size();
-	int height = tempLayer.size();
-
-	mapTileHeight = height;
-	mapTileWidth = width;
-
-	TileMapLayer mapData(width, height);
-
-	for (int y = 0; y < height; y++)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			mapData.setTile(x, y, tempLayer[y][x]);
-		}
-	}
-
-	return mapData;
 }
 
 vector<vector<vec2>> Tilemap::CalculateUVCoordsInMap(int heightTiles, int widthTiles, int totalHeight, int totalWidth, int tileHeight, int tileWidth)
@@ -153,45 +108,20 @@ vector<vector<vec2>> Tilemap::CalculateUVCoordsInMap(int heightTiles, int widthT
 			vector<vec2> uvCoords;
 
 			uvCoords.push_back(vec2(static_cast<float>(j * tileWidth) / totalWidth,
-				static_cast<float>(i * tileHeight) / totalHeight));
+				1.0f - static_cast<float>(i * tileHeight) / totalHeight));
+
 			uvCoords.push_back(vec2(static_cast<float>((j + 1) * tileWidth) / totalWidth,
-				static_cast<float>(i * tileHeight) / totalHeight));
+				1.0f - static_cast<float>(i * tileHeight) / totalHeight));
+
 			uvCoords.push_back(vec2(static_cast<float>(j * tileWidth) / totalWidth,
-				static_cast<float>((i + 1) * tileHeight) / totalHeight));
+				1.0f - static_cast<float>((i + 1) * tileHeight) / totalHeight));
+
 			uvCoords.push_back(vec2(static_cast<float>((j + 1) * tileWidth) / totalWidth,
-				static_cast<float>((i + 1) * tileHeight) / totalHeight));
+				1.0f - static_cast<float>((i + 1) * tileHeight) / totalHeight));
 
 			uvCoordsList.push_back(uvCoords);
 		}
 	}
 
 	return uvCoordsList;
-}
-
-void Tilemap::AddToVertex(float x, float y, int tileId, vec2 UvCoord, vector<float>& vertexVector)
-{
-	//position
-	vertexVector.push_back(x);
-	vertexVector.push_back(y);
-	vertexVector.push_back(0.0f);
-
-	//color
-	vertexVector.push_back(1.0f);
-	vertexVector.push_back(1.0f);
-	vertexVector.push_back(1.0f);
-
-	if (tileId >= 0)
-	{
-		vertexVector.push_back(1.0f);
-
-	}
-
-	else
-	{
-		vertexVector.push_back(0.0f);
-	}
-
-	//UV
-	vertexVector.push_back(UvCoord.x);
-	vertexVector.push_back(UvCoord.y);
 }

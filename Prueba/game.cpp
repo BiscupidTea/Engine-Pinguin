@@ -15,11 +15,16 @@ Game::~Game()
 
 void Game::init()
 {
+	const char* tileMapFiles[] = 
+	{
+		"res/Tilemap/PruebaTereno_Terreno.csv",
+		"res/Tilemap/PruebaTereno_Obstaculos.csv"
+	};
 
 	//Init Texture
 	TextureColor2 = Vector4{ 1.0f, 1.0f, 1.0f, 1 };
 	TexturePosition2 = Vector3{ width / 4,height / 4,0 };
-	TextureScale2 = Vector3{ 64,64,1 };
+	TextureScale2 = Vector3{ 50,50,1 };
 	TextureRotation2 = Vector3{ 0,0,0 };
 
 	const char* path = "res/Sonic_Mania_Sprite_Sheet.png";
@@ -28,7 +33,6 @@ void Game::init()
 	//Idle Animation
 	idleAnimation = new Animation();
 	idleAnimation->AddFrame(133, 92, 49, 48, 830, 465, 1000, 5);
-
 
 	//Background
 	BackgroundPos = Vector3{ width / 2,height /2,0 };
@@ -51,7 +55,8 @@ void Game::init()
 	Letter->SetAnimation(idleAnimation);
 	Player->SetAnimation(playerIdle);
 
-	tilemap = new Tilemap("res/Tilemap/Map.tmx", TextureColor2, GetRenderer(), PlayerPos, TextureScale2, TextureRotation2);
+	tilemap = new Tilemap("res/Tilemap/Tiles.tsx", {tileMapFiles[0], tileMapFiles[1]}, "res/Tilemap/tilemap.png", 
+		TextureColor2, GetRenderer(), Vector3{ 100,350,0 }, Vector3{50,50,1}, TextureRotation2);
 }
 
 void Game::update()
@@ -110,10 +115,10 @@ void Game::update()
 	Letter->Update();
 	Player->Update();
 
-	BackGround->Draw();
+	//BackGround->Draw();
+	tilemap->Draw();
 	Letter->Draw();
 	Player->Draw();
-	//tilemap->Draw();
 }
 
 void Game::exit()

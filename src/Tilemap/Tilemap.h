@@ -1,9 +1,9 @@
 #pragma once
 #include "Tools/dll-Exp-Inp.h"
-#include "Tile.h"
+
+#include "TilemapLayer.h"
 #include "Entity/Entity2D.h"
 
-#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -13,37 +13,28 @@ class EXPORT Tilemap : public Entity2D
 {
 private:
 
-    void LoadTileMaps(const vector<const char*>& tileMapFiles);
     void LoadTileSet(const char* tileSetFile);
 
-    TileMapLayer ReadSingleMap(const char* filename);
     vector<vector<vec2>> CalculateUVCoordsInMap(int heightTiles, int widthTiles, int totalHeight, int totalWidth, int tileHeight, int tileWidth);
-    void AddToVertex(float x, float y, int tileId, vec2 UvCoord, vector<float>& vertexVector);
 
-    vector<TileMapLayer> tileMap;
-    vector<Tile> tileSet;
+	vector<Tile> tileSet;
+	unsigned int tileMapTexture;
 
-    unsigned int tileMapTexture;
+	//Map
+	int mapPixelWidth;
+	int mapPixelHeight;
 
-    //Map
-    int mapPixelWidth;
-    int mapPixelHeight;
+	int tileSetTileHeight;
+	int tileSetTileWidth;
 
-    int tileSetTileHeight;
-    int tileSetTileWidth;
+	int mapTileHeight;
+	int mapTileWidth;
 
-    int mapTileHeight;
-    int mapTileWidth;
+	int layerCount;
 
-    int layerCount;
-
-    //Tiles
-    int tilePixelWidth;
-    int tilePixelHeight;
-
-    float* vertex;
-    int* indices;
-
+	//Tiles
+	int tilePixelWidth;
+	int tilePixelHeight;
 
 public:
 
@@ -52,9 +43,8 @@ public:
 
 	~Tilemap();
 
-    void Draw();
+	vector<TilemapLayer*> layers;
 
-    bool hasCollision(int layer, Entity2D entity);
-    bool hasCollision(int layer, int x, int y, int width, int height);
+    void Draw();
 };
 
