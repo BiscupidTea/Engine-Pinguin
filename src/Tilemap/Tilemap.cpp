@@ -11,7 +11,8 @@ Tilemap::Tilemap(const char* tileSetFile, const vector<const char*>& tileMapFile
 
 	for (int i = 0; i < tileMapFiles.size(); i++)
 	{
-		layers.emplace_back(new TilemapLayer(tileMapFiles.at(i), tileMapImage, tileSet, rgba, renderer, newPosition, newScale, newRotation));
+		layers.emplace_back(new TilemapLayer(tileMapFiles.at(i), tileMapImage, tileSet, rgba, renderer, newPosition, 
+			                                 newScale, newRotation));
 	}
 }
 
@@ -51,8 +52,8 @@ void Tilemap::LoadTileSet(const char* tileSetFile)
 	tileSetTileHeight = (mapPixelHeight / tilePixelHeight);
 	tileSetTileWidth = (mapPixelWidth / tilePixelWidth);
 
-	vector<vector<vec2>> tileSetUV = CalculateUVCoordsInMap(tileSetTileHeight, tileSetTileWidth, mapPixelHeight, mapPixelWidth, tilePixelHeight,
-		tilePixelWidth);
+	vector<vector<vec2>> tileSetUV = CalculateUVCoordsInMap(tileSetTileHeight, tileSetTileWidth, 
+		                                                    mapPixelHeight, mapPixelWidth, tilePixelHeight, tilePixelWidth);
 
 	root = doc.FirstChildElement("tileset");
 
@@ -101,23 +102,29 @@ vector<vector<vec2>> Tilemap::CalculateUVCoordsInMap(int heightTiles, int widthT
 {
 	vector<vector<vec2>> uvCoordsList;
 
-	for (int i = 0; i < heightTiles; ++i)
+	int padding = 0;
+
+	for (int y = 0; y < heightTiles; ++y)
 	{
-		for (int j = 0; j < widthTiles; ++j)
+		for (int x = 0; x < widthTiles; ++x)
 		{
 			vector<vec2> uvCoords;
 
-			uvCoords.push_back(vec2(static_cast<float>(j * tileWidth) / totalWidth,
-				1.0f - static_cast<float>(i * tileHeight) / totalHeight));
-
-			uvCoords.push_back(vec2(static_cast<float>((j + 1) * tileWidth) / totalWidth,
-				1.0f - static_cast<float>(i * tileHeight) / totalHeight));
-
-			uvCoords.push_back(vec2(static_cast<float>(j * tileWidth) / totalWidth,
-				1.0f - static_cast<float>((i + 1) * tileHeight) / totalHeight));
-
-			uvCoords.push_back(vec2(static_cast<float>((j + 1) * tileWidth) / totalWidth,
-				1.0f - static_cast<float>((i + 1) * tileHeight) / totalHeight));
+			//topLeft
+			uvCoords.push_back(vec2(static_cast<float>((x * tileWidth) + padding * x) / totalWidth,
+				               1.0f - static_cast<float>((y * tileHeight) + padding * y) / totalHeight));
+			
+			//TopRight
+			uvCoords.push_back(vec2(static_cast<float>(((x + 1) * tileWidth) + padding * x) / totalWidth,
+				               1.0f - static_cast<float>((y * tileHeight) + padding * y) / totalHeight));
+			
+			//BottomLeft
+			uvCoords.push_back(vec2(static_cast<float>((x * tileWidth) + padding * x) / totalWidth,
+				               1.0f - static_cast<float>(((y + 1) * tileHeight) + padding * y) / totalHeight));
+			
+			//BottomRight
+			uvCoords.push_back(vec2(static_cast<float>(((x + 1) * tileWidth) + padding * x) / totalWidth,
+			                   1.0f - static_cast<float>(((y + 1) * tileHeight) + padding * y) / totalHeight));
 
 			uvCoordsList.push_back(uvCoords);
 		}

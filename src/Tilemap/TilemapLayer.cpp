@@ -65,7 +65,9 @@ TilemapLayer::~TilemapLayer()
 
 void TilemapLayer::Draw()
 {
-    DrawTexture(tileMapTexture);
+    render->DrawTexture(VAO, indexSize, color, model, tileMapTexture);
+    
+    //DrawTexture(tileMapTexture);
 }
 
 bool TilemapLayer::HasCollision(int layer, Entity2D entity)

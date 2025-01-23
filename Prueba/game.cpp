@@ -55,8 +55,8 @@ void Game::init()
 	Letter->SetAnimation(idleAnimation);
 	Player->SetAnimation(playerIdle);
 
-	tilemap = new Tilemap("res/Tilemap/Tiles.tsx", {tileMapFiles[0], tileMapFiles[1]}, "res/Tilemap/Tilemap_Dungeon_original_size.png", 
-		                   TextureColor2, GetRenderer(), Vector3{ 100, 350, 0 }, Vector3{ 50, 50, 1 }, Vector3{ 0, 0, 0 });
+	tilemap = new Tilemap("res/Tilemap/Tiles.tsx", {tileMapFiles[0], tileMapFiles[1]}, "res/Tilemap/tilemap_packed.png", 
+		                   TextureColor2, GetRenderer(), Vector3{ 100, 400, 0 }, Vector3{ 40, 40, 1 }, Vector3{ 0, 0, 0 });
 }
 
 void Game::update()
@@ -115,7 +115,7 @@ void Game::update()
 	Letter->Update();
 	Player->Update();
 
-	//BackGround->Draw();
+	BackGround->Draw();
 	tilemap->Draw();
 	Letter->Draw();
 	Player->Draw();
