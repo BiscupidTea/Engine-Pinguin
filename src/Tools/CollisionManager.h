@@ -10,5 +10,6 @@ namespace collisionManager
 		public:
 
 			static bool CheckCollisionRecRec(Entity2D* entityOne, Entity2D* entityTwo);
+			static bool CheckCollisionTileEntity(Entity2D rect, float posX, float posY, float scaleX, float scaleY);
 	};
 }

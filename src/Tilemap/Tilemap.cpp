@@ -45,6 +45,11 @@ void Tilemap::LoadTileSet(const char* tileSetFile)
 	root->QueryIntAttribute("tilewidth", &tilePixelWidth);
 	root->QueryIntAttribute("tileheight", &tilePixelHeight);
 
+	if (root->QueryIntAttribute("spacing", &spacing) != XML_SUCCESS)
+	{
+		spacing = 0;
+	}
+
 	root = doc.FirstChildElement("tileset")->FirstChildElement("image");
 	root->QueryIntAttribute("width", &mapPixelWidth);
 	root->QueryIntAttribute("height", &mapPixelHeight);
@@ -131,4 +136,17 @@ vector<vector<vec2>> Tilemap::CalculateUVCoordsInMap(int heightTiles, int widthT
 	}
 
 	return uvCoordsList;
+}
+
+bool Tilemap::CheckCollision(Entity2D entity)
+{
+	for (int i = 0; i < layers.size(); i++)
+	{
+		if (layers[i]->HasCollision(entity))
+		{
+			cout << "collision layer" << i << endl;
+			return true;
+		}
+	}
+	return false;
 }

@@ -18,4 +18,26 @@ namespace collisionManager
 
 		return collisionX && collisionY;
 	}
+	bool CollisionManager::CheckCollisionTileEntity(Entity2D entity, float posX, float posY, float scaleX, float scaleY)
+	{
+        float aRight = entity.getPosition().x + glm::abs(entity.getScale().x) / 2;
+        float bLeftSide = posX;
+        float aLeftSide = entity.getPosition().x - glm::abs(entity.getScale().x) / 2;
+        float bRightSide = posX + glm::abs(scaleX);
+
+        // collision x-axis?
+        bool collisionX = aRight >= bLeftSide &&
+             bRightSide >= aLeftSide;
+
+        float aUpSide = entity.getPosition().y + glm::abs(entity.getScale().y) / 2;
+        float bDownSide = posY;
+        float bUpSide = posY + glm::abs(scaleY);
+        float aDownSide = entity.getPosition().y - glm::abs(entity.getScale().y) / 2;
+        
+		// collision y-axis?
+        bool collisionY = aUpSide >= bDownSide &&
+             bUpSide >= aDownSide;
+
+        return collisionX && collisionY;
+	}
 }

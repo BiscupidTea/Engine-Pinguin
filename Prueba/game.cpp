@@ -55,7 +55,7 @@ void Game::init()
 	Letter->SetAnimation(idleAnimation);
 	Player->SetAnimation(playerIdle);
 
-	tilemap = new Tilemap("res/Tilemap/Tiles.tsx", {tileMapFiles[0], tileMapFiles[1]}, "res/Tilemap/tilemap_packed.png", 
+	tilemap = new Tilemap("res/Tilemap/TilesJunto.tsx", {tileMapFiles[0], tileMapFiles[1]}, "res/Tilemap/tilemap_packed.png", 
 		                   TextureColor2, GetRenderer(), Vector3{ 100, 400, 0 }, Vector3{ 40, 40, 1 }, Vector3{ 0, 0, 0 });
 }
 
@@ -112,9 +112,18 @@ void Game::update()
 		Player->setPosition(lastTexturePos);
 	}
 
+	if(tilemap->CheckCollision(*Player))
+	{
+		Player->setPosition(lastTexturePos);
+	}
+
+
+
+	//Update
 	Letter->Update();
 	Player->Update();
 
+	//Draw
 	BackGround->Draw();
 	tilemap->Draw();
 	Letter->Draw();

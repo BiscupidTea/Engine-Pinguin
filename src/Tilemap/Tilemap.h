@@ -32,6 +32,8 @@ private:
 
 	int layerCount;
 
+	int spacing;
+
 	//Tiles
 	int tilePixelWidth;
 	int tilePixelHeight;
@@ -46,5 +48,7 @@ public:
 	vector<TilemapLayer*> layers;
 
     void Draw();
+
+	bool CheckCollision(Entity2D entity);
 };
 

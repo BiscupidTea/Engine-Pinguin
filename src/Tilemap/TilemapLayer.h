@@ -4,10 +4,12 @@
 
 #include "Tile.h"
 #include "TilemapLayerData.h"
+#include "Tools/CollisionManager.h"
 
 #include <vector>
 
 using namespace Entity2D;
+using namespace collisionManager;
 
 class EXPORT TilemapLayer : public Entity2D
 {
@@ -20,8 +22,7 @@ public:
 
     void Draw();
 
-    bool HasCollision(int layer, Entity2D entity);
-    bool HasCollision(int layer, int x, int y, int width, int height);
+    bool HasCollision(Entity2D entity);
 
 private:
 
